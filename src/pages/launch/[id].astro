@@ -1,0 +1,35 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getLaunchBy, getLatestLaunches } from '../../services/spacex';
+import type { Doc } from '../../types/api';
+import Layout from '../../layouts/Layout.astro';
+
+const { id } = Astro.params;
+
+let launch: Doc | undefined;
+if (id) {
+  launch = await getLaunchBy({ id });
+}
+
+// export const getStaticPaths = (async () => {
+//   const launches = await getLatestLaunches();
+
+//   // generate dynamic routes for each launch
+//   return launches.map((launch) => ({
+//     params: {
+//       id: launch.id,
+//     },
+//   }));
+// }) satisfies GetStaticPaths;
+---
+
+<Layout title={`Lanzamiento ${id}`}>
+  <article class="flex gap-y-4 flex-col">
+    <img src={launch?.links?.patch.small} alt="" class="w-52 h-auto" />
+    <h2 class="text-4xl font-bold">
+      Launch #
+      {launch?.flight_number}
+    </h2>
+    <p class="text-lg">{launch?.details}</p>
+  </article>
+</Layout>
